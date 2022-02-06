@@ -17,6 +17,12 @@ struct Tensor {
   std::array<int, N> strides;
   std::unique_ptr<T[]> data;
 
+  // Disable copy && Allow move
+  Tensor(const Tensor&) = delete;
+  Tensor& operator=(const Tensor&) = delete;
+  Tensor(Tensor&&) = default;
+  Tensor& operator=(Tensor&&) = default;
+
   int size() const {
     return std::accumulate(shape.begin(), shape.end(), 1,
                            std::multiplies<int>());
