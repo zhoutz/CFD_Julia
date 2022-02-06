@@ -16,7 +16,7 @@ ax1 = fig.add_subplot(1, 2, 1)
 ax2 = fig.add_subplot(1, 2, 2)
 
 ax1.plot(x, u_e, lw=4, ls="-", color="b", label="Exact solution")
-ax1.plot(x, u_n, lw=4, ls="--", color="r", label="FTCS solution")
+ax1.plot(x, u_n, lw=4, ls="--", color="r", label="RK3 solution")
 ax1.set_xlabel("$x$")
 ax1.set_ylabel("$u$")
 ax1.set_title("Solution field")
@@ -31,6 +31,6 @@ ax2.set_title("Discretization error")
 ax2.set_xlim(-1, 1)
 
 fig.tight_layout()
-fig.savefig("ftcs.pdf")
+fig.savefig("rk3.pdf")
 
 # plt.show()

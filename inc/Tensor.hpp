@@ -63,5 +63,17 @@ auto MakeTensor(Ints... ints) {
   return Tensor<T, sizeof...(Ints)>(ints...);
 }
 
+template <class... Ints>
+auto MakeTensorD(Ints... ints) {
+  return Tensor<double, sizeof...(Ints)>(ints...);
+}
+
+using VectorD = Tensor<double, 1>;
+using MatrixD = Tensor<double, 2>;
+
+auto MakeVectorD(int i0) { return VectorD(i0); }
+
+auto MakeMatrixD(int i0, int i1) { return MatrixD(i0, i1); }
+
 }  // namespace ts
 }  // namespace tz

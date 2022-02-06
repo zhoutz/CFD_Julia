@@ -1,6 +1,6 @@
 #include "../../inc/_.hpp"
 
-double compute_l2norm(Tensor<double, 1> const& r) {
+double compute_l2norm(VectorD const& r) {
   double rms = 0.0;
   for (int i = 1; i < r.size() - 1; ++i) {
     rms += r(i) * r(i);
@@ -19,10 +19,10 @@ int nt = t / dt;
 
 double alpha = 1 / (PI * PI);
 
-auto x = MakeTensor<double>(nx + 1);
-auto u_e = MakeTensor<double>(nx + 1);
-auto error = MakeTensor<double>(nx + 1);
-auto un = MakeTensor<double>(nt + 1, nx + 1);
+auto x = MakeVectorD(nx + 1);
+auto u_e = MakeVectorD(nx + 1);
+auto error = MakeVectorD(nx + 1);
+auto un = MakeMatrixD(nt + 1, nx + 1);
 
 int main() {
   for (int i = 0; i < nx + 1; ++i) {
@@ -44,7 +44,7 @@ int main() {
     un(k, nx) = 0.0;
   }
 
-  auto u_error = MakeTensor<double>(nx + 1);
+  auto u_error = MakeVectorD(nx + 1);
   for (int i = 0; i < nx + 1; ++i) {
     u_error(i) = un(nt, i) - u_e(i);
   }
