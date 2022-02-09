@@ -84,45 +84,44 @@ void wenoR(int n, VectorD const& u, VectorD& f) {
   }
 }
 
-void wavespeed(int n, VectorD const& u, VectorD& ps) {
-  for (int i = 0; i < n; ++i) {
-    ps(i) = abs(u(i));
+void rusanov(int nx, VectorD const& u, VectorD const& uL, VectorD const& uR,
+             VectorD& f, VectorD const& fL, VectorD const& fR) {
+  auto ps = MakeVectorD(nx);
+  ps(0) = max(abs(u(0)), abs(u(nx - 1)));
+  for (int i = 1; i < nx; ++i) {
+    ps(i) = max(abs(u(i)), abs(u(i - 1)));
   }
-  for (int i = 0; i < n; ++i) {
-    for (int j = -2; j <= 2; ++j) {
-      if (j == 0) continue;
-      ps(i) = max(ps(i), abs(u((i + j + n) % n)));
-    }
+
+  for (int i = 0; i < nx; ++i) {
+    f(i) = 0.5 * (fR(i) + fL(i)) - 0.5 * ps(i) * (uR(i) - uL(i));
+  }
+}
+
+void fluxes(int nx, VectorD const& u, VectorD& f) {
+  for (int i = 0; i < nx; ++i) {
+    f(i) = 0.5 * u(i) * u(i);
   }
 }
 
 void rhs(int nx, double dx, VectorD const& u, VectorD& r) {
   auto f = MakeVectorD(nx);
-  auto fP = MakeVectorD(nx);
-  auto fN = MakeVectorD(nx);
-
-  auto ps = MakeVectorD(nx);
-
+  auto uL = MakeVectorD(nx);
+  auto uR = MakeVectorD(nx);
   auto fL = MakeVectorD(nx);
   auto fR = MakeVectorD(nx);
 
-  for (int i = 0; i < nx; ++i) {
-    f(i) = 0.5 * u(i) * u(i);
+  wenoL(nx, u, uL);
+  wenoR(nx, u, uR);
+
+  fluxes(nx, uL, fL);
+  fluxes(nx, uR, fR);
+
+  rusanov(nx, u, uL, uR, f, fL, fR);
+
+  for (int i = 0; i < nx - 1; ++i) {
+    r(i) = -(f(i + 1) - f(i)) / dx;
   }
-
-  wavespeed(nx, u, ps);
-
-  for (int i = 0; i < nx; ++i) {
-    fP(i) = 0.5 * (f(i) + ps(i) * u(i));
-    fN(i) = 0.5 * (f(i) - ps(i) * u(i));
-  }
-
-  wenoL(nx, fP, fL);
-  wenoR(nx, fN, fR);
-
-  for (int i = 0; i < nx; ++i) {
-    r(i) = -(fL(i + 1) - fL(i)) / dx - (fR(i + 1) - fR(i)) / dx;
-  }
+  r(nx - 1) = -(f(0) - f(nx - 1)) / dx;
 }
 
 void numerical(int nx, int ns, int nt, double dx, double dt, MatrixD& u,
@@ -183,7 +182,7 @@ int main() {
 
   numerical(nx, ns, nt, dx, dt, u, x);
 
-  auto solution = fopen("solution_flux_split.csv", "w");
+  auto solution = fopen("solution_riemann.csv", "w");
   for (int i = 0; i < nx; ++i) {
     fprintf(solution, "%g ", x(i));
   }

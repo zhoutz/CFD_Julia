@@ -85,7 +85,7 @@ auto LinspaceD(double x_min, double x_max, int num) {
   auto res = MakeVectorD(num);
   double step = (x_max - x_min) / (num - 1.0);
   for (int i = 0; i < num; ++i) {
-    res(i) = step * i;
+    res(i) = x_min + step * i;
   }
   return res;
 }
