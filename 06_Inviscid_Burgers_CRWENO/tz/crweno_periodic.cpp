@@ -298,7 +298,7 @@ void numerical(int nx, int ns, int nt, double dx, double dt, MatrixD& u,
     ut(nx) = ut(0);
 
     if ((j + 1) % freq == 0) {
-      printf("t = %g\n", (j + 1) * dt);
+      // printf("t = %g\n", (j + 1) * dt);
       int k = j / freq;
       for (int i = 0; i < nx + 1; ++i) {
         u(k, i) = un(i);
