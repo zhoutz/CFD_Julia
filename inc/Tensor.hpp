@@ -81,5 +81,14 @@ auto MakeVectorD(int i0) { return VectorD(i0); }
 
 auto MakeMatrixD(int i0, int i1) { return MatrixD(i0, i1); }
 
+auto LinspaceD(double x_min, double x_max, int num) {
+  auto res = MakeVectorD(num);
+  double step = (x_max - x_min) / (num - 1.0);
+  for (int i = 0; i < num; ++i) {
+    res(i) = step * i;
+  }
+  return res;
+}
+
 }  // namespace ts
 }  // namespace tz
