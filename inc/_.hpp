@@ -1,9 +1,10 @@
 #pragma once
 
-#include "Tensor.hpp"
-#include "const.hpp"
-
 #include <cmath>
 #include <cstdio>
+
+#include "Tensor.hpp"
+#include "const.hpp"
+#include "func.hpp"
 
 using namespace std;
